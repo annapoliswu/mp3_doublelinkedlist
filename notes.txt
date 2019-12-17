@@ -1,0 +1,46 @@
+----------------- sample.c in 361/2019/Projects/1a ---------
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define BUFFERSIZE 128
+
+typedef struct mp3 {
+  char *name;
+    struct mp3 *next;
+    } mp3_t;
+
+int main (int argc, char *argv[])
+{
+  char  buffer[BUFFERSIZE];
+    mp3_t *mp3;
+      int   len;
+
+  printf("Enter a name: ");
+    if (fgets(buffer, BUFFERSIZE , stdin) != NULL)
+      {
+        len = (int) strlen(buffer);
+	printf("length [%d] of string %s", len, buffer); // notice the length!
+	buffer[len - 1] = '\0';                 // why minus 1 ???
+	mp3 = (mp3_t *) malloc(sizeof(mp3_t));
+	mp3->name = (char *) malloc(len);
+	strcpy(mp3->name, buffer);
+	printf("Name is [%s]...\n", mp3->name);
+      }
+      free(mp3->name);   // line free 1
+      free(mp3);         // line free 2
+      return 0
+ }
+
+-------------------------------
+
+> len-1 because index of buffer goes from 0 to len-1
+> setting last index to null terminater because fgets reads the last enter key in
+> MUST allocate space for all characters + one more for null terminater
+> else will create valgrind errors
+
+> have to free each piece of dynamically allocated memory inside the node and then the node
+> if order is reversed, you lose track of the node and are then dereferencing NULL pointers / nonsense
+> if you forget to free any piece of dynam allo mem, causes memory leak
+
+
